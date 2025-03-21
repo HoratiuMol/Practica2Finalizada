@@ -5,6 +5,8 @@
 #include "esfera.h"
 #include "toroide.h"
 #include "plano.h"
+#include "mundo.h"
+
 #include "freeglut.h"
 
 #pragma warning(disable : 4996) // deshabilita el error por unsafe
@@ -17,18 +19,13 @@ namespace Global {
     Esfera esfera2;
 	Toroide toroide;
     Plano plano;
-
-    // Variables globales para la cámara
-    float theta = 0.0f;          // Ángulo de la órbita de la cámara
-    float radio_camara = 20.0f;  // Distancia de la cámara al origen (escena)
-    float altura_camara = 10.0f; // Altura de la cámara sobre el plano XY
+    Mundo mundo;
 }
 
 // Declaraciones de funciones
 void OnDraw(void);
 void OnTimer(int value);
 void OnKeyboardDown(unsigned char key, int x, int y);
-void Camara();
 
 int main(int argc, char* argv[]) {
     // Inicializar el gestor de ventanas GLUT y crear la ventana
@@ -85,7 +82,7 @@ void OnDraw(void) {
     glLoadIdentity();
 
     // Invocamos cámara
-    Camara();
+    Global::mundo.camara();
 
     // Llamadas a los métodos de Esfera
     Global::esfera.dibuja();
@@ -111,24 +108,8 @@ void OnKeyboardDown(unsigned char key, int x, int y) {
 }
 
 void OnTimer(int value) {
-    Global::theta += 0.02f; // Incrementamos el ángulo para hacer la rotación
-    if (Global::theta > 2 * 3.14) {
-        Global::theta -= 2 * 3.14; // Reseteamos el ángulo si pasa de 360°
-    }
-    // Poner aquí el código de animación
-
+    Global::mundo.rotarOjo(0.05f);
     glutTimerFunc(25, OnTimer, 0);
     glutPostRedisplay();
 }
 
-void Camara() {
-    // Calculamos la posición de la cámara en función del ángulo theta
-    float x = Global::radio_camara * cos(Global::theta);
-    float z = Global::radio_camara * sin(Global::theta);
-    float y = Global::altura_camara; // Altura fija de la cámara
-
-    // Definimos la vista con gluLookAt
-    gluLookAt(x, y, z,   // Posición de la cámara (orbita alrededor del origen)
-        0.0, 0.0, 0.0, // Punto al que mira (centro de la escena)
-        0.0, 1.0, 0.0); // Vector "up" (hacia arriba en el eje Y)
-}

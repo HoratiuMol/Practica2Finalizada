@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="esfera.cpp" />
+    <ClCompile Include="mundo.cpp" />
     <ClCompile Include="plano.cpp" />
     <ClCompile Include="Practica2b.cpp" />
     <ClCompile Include="Toroide.cpp" />
